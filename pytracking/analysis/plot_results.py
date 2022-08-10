@@ -221,7 +221,7 @@ def plot_results(trackers, dataset, report_name, merge_results=False,
     # Load pre-computed results
     result_plot_path = os.path.join(settings.result_plot_path, report_name)
     eval_data = check_and_load_precomputed_results(trackers, dataset, report_name, force_evaluation, **kwargs)
-
+    
     # Merge results from multiple runs
     if merge_results:
         eval_data = merge_multiple_runs(eval_data)

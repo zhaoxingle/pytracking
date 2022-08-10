@@ -106,6 +106,8 @@ class DiMP(BaseTracker):
         backbone_feat, sample_coords, im_patches = self.extract_backbone_features(im, self.get_centered_sample_pos(),
                                                                       self.target_scale * self.params.scale_factors,
                                                                       self.img_sample_sz)
+        # backbone_feat (layer2,1,512,36,36),(layer3,1,1024,18,18),
+
         # Extract classification features
         test_x = self.get_classification_features(backbone_feat)
 

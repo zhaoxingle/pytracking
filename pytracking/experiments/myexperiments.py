@@ -17,3 +17,11 @@ def uav_test():
 
     dataset = get_dataset('uav')
     return trackers, dataset
+
+def viso_test():
+    # Run DiMP18, ATOM and ECO on the UAV dataset
+    trackers = trackerlist('dimp', 'dimp50', range(1))
+
+
+    dataset = get_dataset('VISO')
+    return trackers, dataset

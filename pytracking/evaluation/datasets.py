@@ -7,6 +7,8 @@ DatasetInfo = namedtuple('DatasetInfo', ['module', 'class_name', 'kwargs'])
 pt = "pytracking.evaluation.%sdataset"  # Useful abbreviations to reduce the clutter
 
 dataset_dict = dict(
+    satsot=DatasetInfo(module=pt % "satsot", class_name="SatsotDataset", kwargs=dict()),
+    viso=DatasetInfo(module=pt % "viso", class_name="VISODataset", kwargs=dict()),
     otb=DatasetInfo(module=pt % "otb", class_name="OTBDataset", kwargs=dict()),
     nfs=DatasetInfo(module=pt % "nfs", class_name="NFSDataset", kwargs=dict()),
     uav=DatasetInfo(module=pt % "uav", class_name="UAVDataset", kwargs=dict()),
@@ -45,15 +47,17 @@ dataset_dict = dict(
                                  kwargs=dict(version='2019', split='jjvalid', all_frames=True, cleanup=['starts'])),
 )
 
-
+# return Sequence class
 def load_dataset(name: str):
     """ Import and load a single dataset."""
     name = name.lower()
+    # dset_info is a tuple  like DatasetInfo(module='pytracking.evaluation.otbdataset', class_name='OTBDataset', kwargs={})
     dset_info = dataset_dict.get(name)
     if dset_info is None:
         raise ValueError('Unknown dataset \'%s\'' % name)
-
+    # import otbdataset.py
     m = importlib.import_module(dset_info.module)
+#  get a attribute value of a instance ,instance otbdataset
     dataset = getattr(m, dset_info.class_name)(**dset_info.kwargs)  # Call the constructor
     return dataset.get_sequence_list()
 

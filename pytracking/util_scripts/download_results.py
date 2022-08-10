@@ -25,7 +25,7 @@ pytracking_results_link_dict = {
         "prdimp18_000.zip": "1DuZJSBJ-23WJBQTOWSAaoPYSbGAJJN2Z",
         "prdimp50_004.zip": "1f9bx9-dtx3B5_IvIJhjjJyp-cnXciqLO",
         "dimp50_004.zip": "1Lj3p8mYCoIqxzdQXZkWFTw-MA8c6eeLa",
-        "dimp50_000.zip": "1LCgf5sg453Z4bY37A_W5mbXeG68U1fET",
+        "dimp50.zip": "1LCgf5sg453Z4bY37A_W5mbXeG68U1fET",
         "dimp18_000.zip": "17M7dJZ1oKrIY4-O5lL_mlQPEubUn034g",
         "dimp18_001.zip": "1AsiliVgISyDTouYOQYVOXA0srj3YskhJ",
         "dimp50_got_001.zip": "1EE5FcPXqMBkv_0ghfzytCMmbKxWxy04p",

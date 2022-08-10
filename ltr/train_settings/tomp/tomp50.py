@@ -1,5 +1,5 @@
 import torch.optim as optim
-from ltr.dataset import Lasot, Got10k, TrackingNet, MSCOCOSeq
+from ltr.dataset import Lasot, Got10k, TrackingNet, MSCOCOSeq, Viso
 from ltr.data import processing, sampler, LTRLoader
 from ltr.models.tracking import tompnet
 import ltr.models.loss as ltr_losses
@@ -49,14 +49,16 @@ def run(settings):
     settings.use_test_frame_encoding = False  # Set to True to use the same as in the paper but is less stable to train.
 
     # Train datasets
-    lasot_train = Lasot(settings.env.lasot_dir, split='train')
-    got10k_train = Got10k(settings.env.got10k_dir, split='vottrain')
-    trackingnet_train = TrackingNet(settings.env.trackingnet_dir, set_ids=list(range(4)))
-    coco_train = MSCOCOSeq(settings.env.coco_dir)
+    #lasot_train = Lasot(settings.env.lasot_dir, split='train')
+    viso_train = Viso(settings.env.viso_dir)
+    #got10k_train = Got10k(settings.env.got10k_dir, split='vottrain')
+    # trackingnet_train = TrackingNet(settings.env.trackingnet_dir, set_ids=list(range(4)))
+    # coco_train = MSCOCOSeq(settings.env.coco_dir)
 
     # Validation datasets
-    got10k_val = Got10k(settings.env.got10k_dir, split='votval')
+    #got10k_val = Got10k(settings.env.got10k_dir, split='votval')
 
+    viso_val = Viso(settings.env.viso_dir)
 
     # Data transform
     transform_joint = tfm.Transform(tfm.ToGrayscale(probability=0.05),
@@ -100,7 +102,7 @@ def run(settings):
                                                                    center_sampling_radius=settings.center_sampling_radius)
 
     # Train sampler and loader
-    dataset_train = sampler.DiMPSampler([lasot_train, got10k_train, trackingnet_train, coco_train], [1, 1, 1, 1],
+    dataset_train = sampler.DiMPSampler([viso_train], [1],
                                         samples_per_epoch=settings.train_samples_per_epoch, max_gap=settings.max_gap,
                                         num_test_frames=settings.num_test_frames, num_train_frames=settings.num_train_frames,
                                         processing=data_processing_train)
@@ -109,7 +111,7 @@ def run(settings):
                              shuffle=True, drop_last=True, stack_dim=1)
 
     # Validation samplers and loaders
-    dataset_val = sampler.DiMPSampler([got10k_val], [1], samples_per_epoch=settings.val_samples_per_epoch,
+    dataset_val = sampler.DiMPSampler([viso_val], [1], samples_per_epoch=settings.val_samples_per_epoch,
                                       max_gap=settings.max_gap, num_test_frames=settings.num_test_frames,
                                       num_train_frames=settings.num_train_frames, processing=data_processing_val)
 

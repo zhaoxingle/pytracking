@@ -1,8 +1,8 @@
 import numpy as np
 from pytracking.evaluation.data import Sequence, BaseDataset, SequenceList
 from pytracking.utils.load_text import load_text
-
-
+import os
+import json
 class SatsotDataset(BaseDataset):
     """ OTB-2015 dataset
 
@@ -16,7 +16,7 @@ class SatsotDataset(BaseDataset):
     """
     def __init__(self):
         super().__init__()
-        self.base_path = self.env_settings.satsot_dir   #set otb dir
+        self.base_path = self.env_settings.satsot_path   #set otb dir
         #self.sequence_info_list = self._get_sequence_info_list()
         self.sequence_info_list = self.get_sequence(self.base_path)
 
@@ -31,6 +31,7 @@ class SatsotDataset(BaseDataset):
         ext = sequence_info['ext']
         start_frame = sequence_info['startFrame']
         end_frame = sequence_info['endFrame']
+        name=sequence_info['name']
 
         init_omit = 0
         if 'initOmit' in sequence_info:
@@ -43,8 +44,14 @@ class SatsotDataset(BaseDataset):
         anno_path = '{}/{}'.format(self.base_path, sequence_info['anno_path'])
 
         # NOTE: OTB has some weird annos which panda cannot handle
-        ground_truth_rect = load_text(str(anno_path), delimiter=(',', None), dtype=np.float64, backend='numpy')
+        #ground_truth_rect = load_text(str(anno_path), delimiter=(',', None), dtype=np.float64, backend='numpy')
+        f = open(r"/home/zxl/datasets/satsot/SatSOT/SatSOT.json", 'r')
+        content = f.read()
+        dict = json.loads(content)
 
+        f.close()
+        ground_truth_rect=dict[name]['gt_rect']
+        ground_truth_rect=np.array(ground_truth_rect)
         return Sequence(sequence_info['name'], frames, 'otb', ground_truth_rect[init_omit:,:],
                         object_class=sequence_info['object_class'])
 
@@ -259,30 +266,28 @@ class SatsotDataset(BaseDataset):
 
     def get_sequence(self, base_path):
         sequence_info_list = []
-        for root, dirs, files in os.walk(base_path):
-            if root.split('/')[-1] == 'gt':
-                temp = {"name": "null", "path": "null", "startFrame": 'null', "endFrame": 'null', "nz": 6, "ext": "jpg",
-                        "anno_path": "null", "object_class": "null"}
-                number = root.split('/')[-2]
-                name = root.split('/')[-3]
-                path = os.path.join('/' + name, number, "img")  # /ship/045/img
 
-                for i in range(len(files)):
-                    if files[i].split("_")[0] == '1':
-                        # print(files[i])
-                        startFrame = files[i].split("_")[1]
-                        endFrame = files[i].split("_")[2].split(".")[0]
-                        temp['startFrame'] = int(startFrame)
-                        temp['endFrame'] = int(endFrame)
-                        anno_path = os.path.join(name, number, "gt", files[i])  # /ship/045/img
-                        temp['anno_path'] = anno_path
-                temp['name'] = name+number
-                temp['path'] = path
-                temp['object_class'] = name
-                if temp['startFrame'] == 'null':
-                    continue
-                if temp['endFrame'] == 'null':
-                    continue
-                # print(temp)
-                sequence_info_list.append(temp)
+
+        f = open(r"/home/zxl/datasets/satsot/SatSOT/SatSOT.json", 'r')
+        content = f.read()
+        dict = json.loads(content)
+
+        f.close()
+        for key, values in dict.items():
+            temp = {"name": "null", "path": "null", "startFrame": 'null', "endFrame": 'null', "nz": 4, "ext": "jpg",
+                    "anno_path": "null", "object_class": "null"}
+            name=key
+            path=os.path.join(name,'img')
+            startFrame=1
+            endFrame=len(values['img_names'])
+            anno_path=os.path.join(name,'groundtruth.txt')
+            object_class=name.split('_')[0]
+            temp['name']=name
+            temp['path'] = path
+            temp['startFrame'] = startFrame
+            temp['endFrame'] = endFrame
+            temp['anno_path'] = anno_path
+            temp['object_class'] = object_class
+            sequence_info_list.append(temp)
+
         return sequence_info_list

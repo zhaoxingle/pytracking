@@ -1,4 +1,5 @@
 from .lasot import Lasot
+from .viso import Viso
 from .got10k import Got10k
 from .tracking_net import TrackingNet
 from .imagenetvid import ImagenetVID

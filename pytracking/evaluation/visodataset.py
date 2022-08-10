@@ -2,7 +2,8 @@ import numpy as np
 from pytracking.evaluation.data import Sequence, BaseDataset, SequenceList
 from pytracking.utils.load_text import load_text
 import os
-sequence_info_list = []
+
+
 class VISODataset(BaseDataset):
     """ OTB-2015 dataset
 
@@ -17,9 +18,10 @@ class VISODataset(BaseDataset):
 
     def __init__(self):
         super().__init__()
-        self.base_path = self.env_settings.otb_path  # set otb dir
-        self.get_sequence(base_path) #ziji xiede
-        self.sequence_info_list = self._get_sequence_info_list()
+        self.base_path = self.env_settings.viso_path  # set otb dir
+        self.sequence_info_list = self.get_sequence(self.base_path)  # ziji xiede
+        #print('haha')
+        # self.sequence_info_list = self._get_sequence_info_list()
 
     # return SequenceList(every frame info )
     def get_sequence_list(self):
@@ -38,17 +40,20 @@ class VISODataset(BaseDataset):
             init_omit = sequence_info['initOmit']
 
         # every imag dir list
-        frames = ['{base_path}/{sequence_path}/{frame:0{nz}}.{ext}'.format(base_path=self.base_path,
-                                                                           sequence_path=sequence_path, frame=frame_num,
-                                                                           nz=nz, ext=ext) for frame_num in
+        frames = ['{base_path}{sequence_path}/{frame:0{nz}}.{ext}'.format(base_path=self.base_path,
+                                                                          sequence_path=sequence_path, frame=frame_num,
+                                                                          nz=nz, ext=ext) for frame_num in
                   range(start_frame + init_omit, end_frame + 1)]
 
         anno_path = '{}/{}'.format(self.base_path, sequence_info['anno_path'])
 
         # NOTE: OTB has some weird annos which panda cannot handle
         ground_truth_rect = load_text(str(anno_path), delimiter=(',', None), dtype=np.float64, backend='numpy')
+        # print(ground_truth_rect)
+        # print(anno_path)
+        ground_truth_rect.reshape((len(ground_truth_rect),4))
 
-        return Sequence(sequence_info['name'], frames, 'otb', ground_truth_rect[init_omit:, :],
+        return Sequence(sequence_info['name'],frames, 'viso', ground_truth_rect[init_omit:, :],
                         object_class=sequence_info['object_class'])
 
     def __len__(self):
@@ -361,28 +366,46 @@ class VISODataset(BaseDataset):
 
         return sequence_info_list
 
-    def get_sequence(self,base_path):
+    #root '/home/zxl/datasets/VISO-dataset/sot/ship/045/gt'
+    def get_sequence(self, base_path):
+        sequence_info_list = []
 
         for root, dirs, files in os.walk(base_path):
+            #dirs:['ship', 'car', 'plane']
+            # root '/home/zxl/datasets/VISO-dataset/sot/
             if root.split('/')[-1] == 'gt':
-                temp = {"name": "null", "path": "null", "startFrame": 'null', "endFrame": 'null', "nz": 4, "ext": "jpg",
-                        "anno_path": "null", "object_class": "null"}
-                name = root.split('/')[-3]
                 number = root.split('/')[-2]
+                name = root.split('/')[-3]
+                
                 path = os.path.join('/' + name, number, "img")  # /ship/045/img
 
                 for i in range(len(files)):
-                    if files[i].split("_")[0] == '1':
-                        # print(files[i])
+                    #sequence_info_list_tmp=[]
+                    temp = {"name": "null", "path": "null", "startFrame": 'null', "endFrame": 'null', "nz": 6,
+                            "ext": "jpg",
+                            "anno_path": "null", "object_class": "null"}
+                    if(len(files[i].split("_"))!=1):
                         startFrame = files[i].split("_")[1]
                         endFrame = files[i].split("_")[2].split(".")[0]
+                        file_num=files[i].split("_")[0]
                         temp['startFrame'] = int(startFrame)
                         temp['endFrame'] = int(endFrame)
-                        anno_path = os.path.join('/' + name, number, "gt", files[i])  # /ship/045/img
+                        anno_path = os.path.join(name, number, "gt", files[i])  # /ship/045/img
                         temp['anno_path'] = anno_path
-                temp['name'] = name
-                temp['path'] = path
-                temp['object_class'] = name
-                # print(temp)
-                sequence_info_list.append(temp)
+                        temp['name'] = name+number+'_'+file_num
+                        temp['path'] = path
+                        temp['object_class'] = name
+                        if temp['startFrame'] == 'null':
+                            continue
+                        if temp['endFrame'] == 'null':
+                            continue
+                        if temp['endFrame'] == temp['startFrame']:
+                            continue
+                        # print(temp)
+                        sequence_info_list.append(temp)
+                    else:
+                        continue
+                # for i in range(len(sequence_info_list_tmp)):
+                #     global
+                #     sequence_info_list.append()
         return sequence_info_list

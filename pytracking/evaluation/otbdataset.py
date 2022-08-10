@@ -16,12 +16,14 @@ class OTBDataset(BaseDataset):
     """
     def __init__(self):
         super().__init__()
-        self.base_path = self.env_settings.otb_path
+        self.base_path = self.env_settings.otb_path #set otb dir
         self.sequence_info_list = self._get_sequence_info_list()
 
+    #return SequenceList(every frame info )
     def get_sequence_list(self):
         return SequenceList([self._construct_sequence(s) for s in self.sequence_info_list])
 
+    #s {'name': 'Basketball', 'path': 'Basketball/img', 'startFrame': 1, 'endFrame': 725, 'nz': 4, 'ext': 'jpg', 'anno_path'
     def _construct_sequence(self, sequence_info):
         sequence_path = sequence_info['path']
         nz = sequence_info['nz']
@@ -33,7 +35,8 @@ class OTBDataset(BaseDataset):
         if 'initOmit' in sequence_info:
             init_omit = sequence_info['initOmit']
 
-        frames = ['{base_path}/{sequence_path}/{frame:0{nz}}.{ext}'.format(base_path=self.base_path, 
+        # every imag dir list
+        frames = ['{base_path}/{sequence_path}/{frame:0{nz}}.{ext}'.format(base_path=self.base_path,
         sequence_path=sequence_path, frame=frame_num, nz=nz, ext=ext) for frame_num in range(start_frame+init_omit, end_frame+1)]
 
         anno_path = '{}/{}'.format(self.base_path, sequence_info['anno_path'])

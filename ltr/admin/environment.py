@@ -8,6 +8,7 @@ def create_default_local_file():
 
     empty_str = '\'\''
     default_settings = OrderedDict({
+        'viso_dir':empty_str,
         'workspace_dir': empty_str,
         'tensorboard_dir': 'self.workspace_dir + \'/tensorboard/\'',
         'pretrained_networks': 'self.workspace_dir + \'/pretrained_networks/\'',

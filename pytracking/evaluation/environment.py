@@ -6,7 +6,8 @@ class EnvSettings:
     def __init__(self):
         pytracking_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
-        self.results_path = '{}/tracking_results/'.format(pytracking_path)
+        self.results_path = '{}/tracking_results'.format(pytracking_path)
+        #self.results_path = '{}/tracking_results/'.format(pytracking_path)
         self.segmentation_path = '{}/segmentation_results/'.format(pytracking_path)
         self.network_path = '{}/networks/'.format(pytracking_path)
         self.result_plot_path = '{}/result_plots/'.format(pytracking_path)
@@ -22,6 +23,8 @@ class EnvSettings:
         self.oxuva_path = ''
         self.davis_dir = ''
         self.youtubevos_dir = ''
+        self.viso_path = ''
+        self.satsot_path = ''
 
         self.got_packed_results_path = ''
         self.got_reports_path = ''

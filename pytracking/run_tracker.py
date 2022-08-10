@@ -14,11 +14,6 @@ from pytracking.evaluation import Tracker
 def run_tracker(tracker_name, tracker_param, run_id=None, dataset_name='otb', sequence=None, debug=0, threads=0,
                 visdom_info=None):
     """Run tracker on sequence or dataset.
-    args:
-        tracker_name: Name of tracking method.
-        tracker_param: Name of parameter file.
-        run_id: The run id.
-        dataset_name: Name of dataset (otb, nfs, uav, tpl, vot, tn, gott, gotv, lasot).
         sequence: Sequence number or name.
         debug: Debug level.
         threads: Number of threads.
@@ -36,17 +31,21 @@ def run_tracker(tracker_name, tracker_param, run_id=None, dataset_name='otb', se
 
     run_dataset(dataset, trackers, debug, threads, visdom_info=visdom_info)
 
+#  跑tomp时，作者网站下载的是高版本pytorch1.6保存的模型为tar，导致我现在的低版本pytorch1.4.0无法直接torch.load, 所以需要在高版本
+#  state_dict = torch.load("/home/zxl/PycharmProjects/pytracking/pytracking/networks/tomp50.pth.tar")
+#  torch.save(state_dict, "/home/zxl/PycharmProjects/pytracking/pytracking/networks/tomp50.pth.tar", _use_new_zipfile_serialization=False)
+#  设置后面的参数，重新加载tar文件，最终才可以在低版本使用tar文件 高了一晚上
 
 def main():
     parser = argparse.ArgumentParser(description='Run tracker on sequence or dataset.')
-    parser.add_argument('tracker_name', type=str, help='Name of tracking method.')
-    parser.add_argument('tracker_param', type=str, help='Name of parameter file.')
+    parser.add_argument('--tracker_name', type=str,default='atom', help='Name of tracking method.')
+    parser.add_argument('--tracker_param', type=str, default='default',help='Name of parameter file.')
     parser.add_argument('--runid', type=int, default=None, help='The run id.')
-    parser.add_argument('--dataset_name', type=str, default='otb', help='Name of dataset (otb, nfs, uav, tpl, vot, tn, gott, gotv, lasot).')
+    parser.add_argument('--dataset_name', type=str, default='viso',help='Name of dataset (otb, nfs, uav, tpl, vot, tn, gott, gotv, lasot).')
     parser.add_argument('--sequence', type=str, default=None, help='Sequence number or name.')
     parser.add_argument('--debug', type=int, default=0, help='Debug level.')
-    parser.add_argument('--threads', type=int, default=0, help='Number of threads.')
-    parser.add_argument('--use_visdom', type=bool, default=True, help='Flag to enable visdom.')
+    parser.add_argument('--threads', type=int, default=4, help='Number of threads.')
+    parser.add_argument('--use_visdom', type=bool, default='false', help='Flag to enable visdom.')
     parser.add_argument('--visdom_server', type=str, default='127.0.0.1', help='Server for visdom.')
     parser.add_argument('--visdom_port', type=int, default=8097, help='Port for visdom.')
 
