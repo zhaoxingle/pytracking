@@ -1,0 +1,26 @@
+Bottleneck @ file:///opt/conda/conda-bld/bottleneck_1657175564434/work
+certifi @ file:///opt/conda/conda-bld/certifi_1655968806487/work/certifi
+cffi @ file:///tmp/build/80754af9/cffi_1636541929935/work
+cycler @ file:///tmp/build/80754af9/cycler_1637851556182/work
+Cython @ file:///opt/conda/conda-bld/cython_1656941947712/work
+kiwisolver @ file:///opt/conda/conda-bld/kiwisolver_1653292039266/work
+
+
+
+
+
+
+
+mkl-random @ file:///tmp/build/80754af9/mkl_random_1626179032232/work
+numexpr @ file:///opt/conda/conda-bld/numexpr_1656940300424/work
+numpy @ file:///opt/conda/conda-bld/numpy_and_numpy_base_1653915516269/work
+packaging @ file:///tmp/build/80754af9/packaging_1637314298585/work
+pycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work
+pyparsing @ file:///tmp/build/80754af9/pyparsing_1635766073266/work
+python-dateutil @ file:///tmp/build/80754af9/python-dateutil_1626374649649/work
+pytz @ file:///opt/conda/conda-bld/pytz_1654762638606/work
+six @ file:///tmp/build/80754af9/six_1644875935023/work
+tornado @ file:///tmp/build/80754af9/tornado_1606942283357/work
+tqdm @ file:///opt/conda/conda-bld/tqdm_1650891076910/work
+typing_extensions @ file:///opt/conda/conda-bld/typing_extensions_1647553014482/work
+torchvision==0.4.0a0+6b959ee
